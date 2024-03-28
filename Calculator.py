@@ -1,6 +1,7 @@
 import customtkinter as ctk
 import tkinter
 from sys import platform
+import keyboard
 
 mode='dark'
 ctk.set_appearance_mode(mode)
@@ -10,9 +11,10 @@ eqstate=False
 operatorstate=False
 
 wind=ctk.CTk()
-wind.geometry("400x570")
+wind.geometry("395x540")
 wind.title("Calculator")
 wind.iconbitmap("Graphics\calculator.ico")
+wind.resizable(width=False, height=False)
 
 
 global counter
@@ -20,6 +22,8 @@ counter=0.0
 fontset=ctk.CTkFont('Sans Serif',30)
 global modecount
 modecount=1
+global operator
+operator=1
 
 
 
@@ -261,54 +265,22 @@ def buttmode():
         mode='dark'
         ctk.set_appearance_mode(mode)
 
-def sc():
-    global operatorstate
-    if (operatorstate==False):
-      global toplevel
-      toplevel = ctk.CTkToplevel()
-      toplevel.title('Scientific Operator')
-      toplevel.geometry ('300x300')
-      toplevel.iconbitmap("Graphics\calculator.ico")
-      operatorstate=True
-      if platform.startswith("win"):
-          toplevel.after(200, lambda: toplevel.iconbitmap("Graphics\calculator.ico"))
-      tframe=ctk.CTkFrame(master=toplevel, width=280, height=280, corner_radius=10)
-      tframe.pack(padx=10, pady=10)
-      
-      buttonabs=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Abs(x)" ,hover_color="blue" ,)
-      buttonabs.place(relx=0.06, rely=0.03)
-      buttonexp=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Exp(x) " ,hover_color="blue" ,)
-      buttonexp.place(relx=0.36, rely=0.03)
-      buttonpow=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Pow(x,y) " ,hover_color="blue" ,)
-      buttonpow.place(relx=0.66, rely=0.03)
-      buttonsqrt=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Sqrt(x)" ,hover_color="blue" ,)
-      buttonsqrt.place(relx=0.06, rely=0.22)
-      buttoncos=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Cos(rad) " ,hover_color="blue" ,)
-      buttoncos.place(relx=0.36, rely=0.22)
-      buttonsin=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Sin(rad)" ,hover_color="blue" ,)
-      buttonsin.place(relx=0.66, rely=0.22)
-      buttontan=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Tan(rad)" ,hover_color="blue" ,)
-      buttontan.place(relx=0.06, rely=0.41)
-      buttondeg2rad=ctk.CTkButton(master=tframe, width=80, height=50, fg_color="grey",text="Rad(deg)" ,hover_color="blue" ,)
-      buttondeg2rad.place(relx=0.36, rely=0.41)
 
-
-      toplevel.protocol("WM_DELETE_WINDOW", closeoperator)
-
-
-def closeoperator():
-    global operatorstate
-    operatorstate=False
-    toplevel.destroy()
-
-
+def scioperator():
+    global operator
+    operator=operator+1
+    if (operator%2==0):
+       wind.geometry("500x540")
+    else:
+        wind.geometry("395x540")
+        
 
 
 
 button1=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="1" ,hover_color="blue", command=butt1 )
 
 button1.place(relx=0.01, rely=0.28)
-button1. bind(("<Return>") ,lambda event:butt1().focus())
+
 
 button2=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="2" ,hover_color="blue", command=butt2 )
 button2.pack(fill="both", expand=True)
@@ -382,8 +354,30 @@ buttonclosebrac=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey"
 buttonclosebrac.pack(fill="both", expand=True)
 buttonclosebrac.place(relx=0.51, rely=0.825)
 
-buttonsc=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="Scientific" ,hover_color="blue" ,command=sc)
+buttonsc=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="Scientific" ,hover_color="blue" ,command=scioperator)
 buttonsc.place(relx=0.01, rely=0.825)
+
+
+tframe=ctk.CTkFrame(master=wind, width=280, height=540, corner_radius=10)
+tframe.place(x=395, y=0)
+
+buttonabs=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Abs(x)" ,hover_color="blue" ,)
+buttonabs.place(relx=0.01, rely=0.0075)
+buttonexp=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Exp(x) " ,hover_color="blue" ,)
+buttonexp.place(relx=0.01, rely=0.13)
+buttonpow=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Pow(x,y) " ,hover_color="blue" ,)
+buttonpow.place(relx=0.01, rely=0.25)
+buttonsqrt=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Sqrt(x)" ,hover_color="blue" ,)
+buttonsqrt.place(relx=0.01, rely=0.37)
+buttoncos=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Cos(rad) " ,hover_color="blue" ,)
+buttoncos.place(relx=0.01, rely=0.495)
+buttonsin=ctk.CTkButton(master=tframe, width=90, height=65, fg_color="orange",text="Sin(rad)" ,hover_color="blue" ,)
+buttonsin.place(relx=0.01, rely=0.6150)
+buttontan=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Tan(rad)" ,hover_color="blue" ,)
+buttontan.place(relx=0.01, rely=0.7450)
+buttondeg2rad=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Rad(deg)" ,hover_color="blue" ,)
+buttondeg2rad.place(relx=0.01, rely=0.8725)
+
 
 
 
@@ -397,7 +391,23 @@ output=ctk.CTkTextbox(master=frame, width=380, height=150, fg_color="grey", font
 output.place(relx=0.01, rely=0.005)
 
 wind.update()
+#keyboard input
 
+keyboard.add_hotkey("1" ,lambda: butt1())
+keyboard.add_hotkey("2" ,lambda: butt2())
+keyboard.add_hotkey("3" ,lambda: butt3())
+keyboard.add_hotkey("4" ,lambda: butt4())
+keyboard.add_hotkey("5" ,lambda: butt5())
+keyboard.add_hotkey("6" ,lambda: butt6())
+keyboard.add_hotkey("7" ,lambda: butt7())
+keyboard.add_hotkey("8" ,lambda: butt8())
+keyboard.add_hotkey("9" ,lambda: butt9())
+keyboard.add_hotkey("0" ,lambda: butt0())
+keyboard.add_hotkey("/" ,lambda: buttdiv())
+keyboard.add_hotkey("*" ,lambda: buttmulti())
+keyboard.add_hotkey("+" ,lambda: buttadd())
+keyboard.add_hotkey("-" ,lambda: buttminus())
+keyboard.add_hotkey("Enter" ,lambda: butteq())
 
 wind.mainloop()
 
