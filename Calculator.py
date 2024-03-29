@@ -1,6 +1,8 @@
 import customtkinter as ctk
 import tkinter
 from sys import platform
+import keyboard
+import math
 
 mode='dark'
 ctk.set_appearance_mode(mode)
@@ -10,9 +12,10 @@ eqstate=False
 operatorstate=False
 
 wind=ctk.CTk()
-wind.geometry("400x570")
+wind.geometry("395x540")
 wind.title("Calculator")
 wind.iconbitmap("Graphics\calculator.ico")
+wind.resizable(width=False, height=False)
 
 
 global counter
@@ -20,6 +23,8 @@ counter=0.0
 fontset=ctk.CTkFont('Sans Serif',30)
 global modecount
 modecount=1
+global operator
+operator=1
 
 
 
@@ -42,6 +47,7 @@ def butt1():
     boxstate='normal'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def butt2():
@@ -54,6 +60,7 @@ def butt2():
     text='2'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 def butt3():
     global counter
@@ -65,6 +72,7 @@ def butt3():
     text='3'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 def butt4():
     global counter
@@ -76,6 +84,7 @@ def butt4():
     text='4'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def butt5():
@@ -88,6 +97,7 @@ def butt5():
     text='5'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def butt6():
@@ -100,6 +110,7 @@ def butt6():
     text='6'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def butt7():
@@ -112,6 +123,7 @@ def butt7():
     text='7'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def butt8():
@@ -124,6 +136,7 @@ def butt8():
     text='8'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 
@@ -137,6 +150,7 @@ def butt9():
     text='9'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 
@@ -150,6 +164,7 @@ def butt0():
     text='0'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def buttdiv():
@@ -162,6 +177,7 @@ def buttdiv():
     text='/'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def buttmulti():
@@ -174,6 +190,7 @@ def buttmulti():
     text='*'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 def buttadd():
@@ -186,6 +203,7 @@ def buttadd():
     text='+'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 def buttminus():
     global counter
@@ -197,9 +215,10 @@ def buttminus():
     text='-'
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 def butteq():
-    text='='
+    text='\n='
     global counter
 
     while True:
@@ -214,16 +233,18 @@ def butteq():
          output.delete(0.0, tkinter.END)
          output.insert(0.0,'Syntax Error: \nInvalid Expression')
          break
+     except TypeError:
+         print('syntax error')
+         output.delete(0.0, tkinter.END)
+         output.insert(0.0,'Syntax Error: \nInvalid Expression')
+         break
     global eqstate
     eqstate=True
     counter=counter+1.0
     output.insert(counter,calculate)
+    output.xview(tkinter.MOVETO, 0.0)
 
-def ac():
-    global counter
-    output.delete(0.0,counter)
-    counter=0
-    eqstate=False
+
 
 def buttopen():
     global counter
@@ -235,6 +256,7 @@ def buttopen():
     text='('
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 
 
@@ -249,6 +271,7 @@ def buttclose():
     
     counter=counter+1.0
     output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 def buttmode():
     global modecount
@@ -261,21 +284,139 @@ def buttmode():
         mode='dark'
         ctk.set_appearance_mode(mode)
 
-def sc():
-    global toplevel
-    toplevel = ctk.CTkToplevel()
-    toplevel.title('Scientific Operator')
-    toplevel.geometry ('300x300')
-    toplevel.iconbitmap("Graphics\calculator.ico")
-    operatorstate=True
-    if platform.startswith("win"):
-        toplevel.after(200, lambda: toplevel.iconbitmap("Graphics\calculator.ico"))
 
+def scioperator():
+    global operator
+    operator=operator+1
+    if (operator%2==0):
+       wind.geometry("500x540")
+    else:
+        wind.geometry("395x540")
+        
+def buttabs():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.fabs('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttexp():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.exp('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttpow():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.pow('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttcomma():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text=','
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttsqrt():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.sqrt('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttcos():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.cos('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttsin():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.sin('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def butttan():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.tan('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttdeg2rad():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='math.radians('
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
+
+def buttdot():
+    global counter
+    global eqstate
+    if (counter!=0)and(eqstate==True):
+        output.delete(0.0, tkinter.END)
+        counter=0
+        eqstate=False
+    text='.'
+    counter=counter+1.0
+    output.insert(counter,text)
+    output.xview(tkinter.MOVETO, 0.75)
 
 button1=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="1" ,hover_color="blue", command=butt1 )
 
 button1.place(relx=0.01, rely=0.28)
-button1. bind(("<Return>") ,lambda event:butt1().focus())
+
 
 button2=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="2" ,hover_color="blue", command=butt2 )
 button2.pack(fill="both", expand=True)
@@ -329,7 +470,7 @@ buttoneq=ctk.CTkButton(master=frame, width=90, height=70, fg_color="orange",text
 buttoneq.pack(fill="both", expand=True)
 buttoneq.place(relx=0.76, rely=0.825)
 
-buttonac=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="AC" ,hover_color="blue" ,command=ac )
+buttonac=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="," ,hover_color="blue" ,command=buttcomma)
 buttonac.pack(fill="both", expand=True)
 buttonac.place(relx=0.26, rely=0.69)
 
@@ -349,13 +490,67 @@ buttonclosebrac=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey"
 buttonclosebrac.pack(fill="both", expand=True)
 buttonclosebrac.place(relx=0.51, rely=0.825)
 
-buttonsc=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="Scientific" ,hover_color="blue" ,command=sc)
+buttonsc=ctk.CTkButton(master=frame, width=90, height=70, fg_color="grey",text="Scientific" ,hover_color="blue" ,command=scioperator)
 buttonsc.place(relx=0.01, rely=0.825)
 
-print(boxstate)
-output=ctk.CTkTextbox(master=frame, width=380, height=150, fg_color="grey", font=fontset, state=boxstate)
+
+tframe=ctk.CTkFrame(master=wind, width=280, height=540, corner_radius=10)
+tframe.place(x=395, y=0)
+
+
+buttonabs=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Abs(x)" ,hover_color="blue" ,command=buttabs)
+buttonabs.place(relx=0.01, rely=0.0075)
+buttonexp=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Exp(x) " ,hover_color="blue" ,command=buttexp)
+buttonexp.place(relx=0.01, rely=0.13)
+buttonpow=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Pow(x,y) " ,hover_color="blue" ,command=buttpow)
+buttonpow.place(relx=0.01, rely=0.25)
+buttonsqrt=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Sqrt(x)" ,hover_color="blue" ,command=buttsqrt)
+buttonsqrt.place(relx=0.01, rely=0.37)
+buttoncos=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Cos(rad) " ,hover_color="blue" ,command=buttcos)
+buttoncos.place(relx=0.01, rely=0.495)
+buttonsin=ctk.CTkButton(master=tframe, width=90, height=65, fg_color="orange",text="Sin(rad)" ,hover_color="blue" ,command=buttsin)
+buttonsin.place(relx=0.01, rely=0.6150)
+buttontan=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Tan(rad)" ,hover_color="blue" ,command=butttan)
+buttontan.place(relx=0.01, rely=0.7450)
+buttondeg2rad=ctk.CTkButton(master=tframe, width=90, height=60, fg_color="orange",text="Rad(deg)" ,hover_color="blue" ,command=buttdeg2rad)
+buttondeg2rad.place(relx=0.01, rely=0.8725)
+
+
+
+
+
+
+
+
+
+
+output=ctk.CTkTextbox(master=frame, width=380, height=150, fg_color="grey", font=fontset, state=boxstate, activate_scrollbars=True, wrap='none')
 output.place(relx=0.01, rely=0.005)
+output.xview(tkinter.MOVETO, 0.5)
 
 wind.update()
+#keyboard input
+
+keyboard.add_hotkey("1" ,lambda: butt1())
+keyboard.add_hotkey("2" ,lambda: butt2())
+keyboard.add_hotkey("3" ,lambda: butt3())
+keyboard.add_hotkey("4" ,lambda: butt4())
+keyboard.add_hotkey("5" ,lambda: butt5())
+keyboard.add_hotkey("6" ,lambda: butt6())
+keyboard.add_hotkey("7" ,lambda: butt7())
+keyboard.add_hotkey("8" ,lambda: butt8())
+keyboard.add_hotkey("9" ,lambda: butt9())
+keyboard.add_hotkey("0" ,lambda: butt0())
+keyboard.add_hotkey("/" ,lambda: buttdiv())
+keyboard.add_hotkey("*" ,lambda: buttmulti())
+keyboard.add_hotkey("+" ,lambda: buttadd())
+keyboard.add_hotkey("-" ,lambda: buttminus())
+keyboard.add_hotkey("Enter" ,lambda: butteq())
+keyboard.add_hotkey("," ,lambda: buttcomma())
+keyboard.add_hotkey("Shift+(" ,lambda: buttopen())
+keyboard.add_hotkey("Shift+)" ,lambda: buttclose())
+keyboard.add_hotkey("." ,lambda: buttdot())
+
+
 wind.mainloop()
 
